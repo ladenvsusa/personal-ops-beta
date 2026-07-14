@@ -4,7 +4,7 @@
 
 ## 当前版本
 
-- 版本号：`0.1.0-beta`
+- 版本号：`0.1.1-beta`
 - 包名：`com.personal.ops.beta`
 - 应用名：`个人运营Beta`
 - Android：`minSdk 23`，`targetSdk 35`

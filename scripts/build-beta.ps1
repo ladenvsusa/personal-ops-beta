@@ -16,10 +16,11 @@ $WrapperProperties = Join-Path $ProjectRoot "android\gradle\wrapper\gradle-wrapp
 $WrapperText = Get-Content $WrapperProperties -Raw
 $OfficialGradleUrl = "distributionUrl=https\://services.gradle.org/distributions/gradle-8.11.1-all.zip"
 $LocalGradleUrl = "distributionUrl=file:///C:/Users/0/Documents/Codex/toolchains/gradle-8.11.1-all.zip"
+$Utf8NoBom = [System.Text.UTF8Encoding]::new($false)
 
 try {
-  $LocalWrapperText = $WrapperText -replace "distributionUrl=.*", $LocalGradleUrl
-  Set-Content -Path $WrapperProperties -Value $LocalWrapperText -Encoding UTF8
+  $LocalWrapperText = $WrapperText -replace "(?m)^distributionUrl=.*$", $LocalGradleUrl
+  [System.IO.File]::WriteAllText($WrapperProperties, $LocalWrapperText.TrimEnd() + "`n", $Utf8NoBom)
 
   Set-Location (Join-Path $ProjectRoot "android")
   & ".\gradlew.bat" assembleDebug
@@ -30,6 +31,6 @@ try {
   Write-Host "Beta APK:" $OutputApk
 }
 finally {
-  $RestoredWrapperText = (Get-Content $WrapperProperties -Raw) -replace "distributionUrl=.*", $OfficialGradleUrl
-  Set-Content -Path $WrapperProperties -Value $RestoredWrapperText -Encoding UTF8
+  $RestoredWrapperText = (Get-Content $WrapperProperties -Raw) -replace "(?m)^distributionUrl=.*$", $OfficialGradleUrl
+  [System.IO.File]::WriteAllText($WrapperProperties, $RestoredWrapperText.TrimEnd() + "`n", $Utf8NoBom)
 }

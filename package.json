@@ -1,6 +1,6 @@
 {
   "name": "personal-life-apk",
-  "version": "0.1.0-beta",
+  "version": "0.1.1-beta",
   "private": false,
   "description": "个人运营系统 Beta APK：聚合人际、运动、学习、工作、理财、出行的个人运营中枢。",
   "scripts": {

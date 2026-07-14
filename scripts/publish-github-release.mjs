@@ -4,8 +4,9 @@ import { basename, resolve } from "node:path";
 
 const owner = "ladenvsusa";
 const repo = "personal-ops-beta";
-const tag = "v0.1.0-beta";
-const releaseName = "个人运营系统 Beta 0.1.0";
+const packageInfo = JSON.parse(readFileSync(resolve("package.json"), "utf8"));
+const tag = `v${packageInfo.version}`;
+const releaseName = `个人运营系统 Beta ${packageInfo.version.replace("-beta", "")}`;
 const description = "个人运营系统 Beta：聚合人际、运动、学习、工作、理财、出行的 Android 个人看板与信息管理工具。";
 const topics = [
   "android",

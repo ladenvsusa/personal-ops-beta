@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>个人运营系统 Beta</title>
+  <title>个人运营 Beta</title>
   <link rel="manifest" href="./manifest.json">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -11,47 +11,29 @@
   <main class="app-shell">
     <header class="topbar">
       <div>
-        <p class="eyebrow" id="todayText">今天</p>
-        <h1>个人运营系统</h1>
+        <p class="eyebrow">今天</p>
+        <h1 id="nowText">--:--</h1>
       </div>
-      <button class="icon-btn" id="exportBtn" title="导出数据">↓</button>
+      <div class="top-actions">
+        <button class="icon-btn" id="dashboardConfigBtn" title="编辑首页看板">⚙</button>
+        <button class="icon-btn" id="exportBtn" title="导出数据">↓</button>
+      </div>
     </header>
 
     <section class="view active" data-view="dashboard">
-      <div class="dashboard-grid">
-        <article class="metric-card">
-          <span>运动</span>
-          <strong id="dashSteps">0 步</strong>
-          <small id="dashCalories">0 千卡</small>
-        </article>
-        <article class="metric-card">
-          <span>睡眠</span>
-          <strong id="dashSleep">待录入</strong>
-          <small>昨晚睡眠</small>
-        </article>
-        <article class="metric-card">
-          <span>任务</span>
-          <strong id="dashTasks">0 项</strong>
-          <small>当前重点</small>
-        </article>
-        <article class="metric-card">
-          <span>支出</span>
-          <strong id="dashSpend">0 元</strong>
-          <small>本月已记录</small>
-        </article>
-      </div>
+      <div class="dashboard-grid" id="dashboardGrid"></div>
 
       <section class="panel">
         <div class="section-title">
           <h2>今日待办</h2>
           <button class="text-btn" data-tab-target="work">去工作</button>
         </div>
-        <div id="todayTasks" class="list empty-list">暂无重点任务</div>
+        <div id="todayTasks" class="compact-list"></div>
       </section>
 
       <section class="panel">
         <div class="section-title">
-          <h2>近期提醒</h2>
+          <h2>通知提醒</h2>
         </div>
         <div class="timeline" id="recentTimeline"></div>
       </section>
@@ -70,26 +52,48 @@
         <button id="downloadPeopleTemplate">模板</button>
         <label class="file-btn">导入<input id="peopleImport" type="file" accept=".csv,.txt"></label>
       </div>
-      <div class="split">
-        <div class="card-list" id="peopleList"></div>
-        <div class="map-panel">
-          <div class="section-title compact">
-            <h2>关系图</h2>
-            <small>可新增多张关系网，拖动人物调整位置</small>
-          </div>
-          <div class="map-toolbar">
-            <select id="networkSelect"></select>
-            <button id="addNetworkBtn">新增关系网</button>
-          </div>
-          <div class="link-toolbar">
-            <select id="linkFrom"></select>
-            <select id="linkTo"></select>
-            <input id="linkLabel" placeholder="关系说明">
-            <button id="addLinkBtn">连线</button>
-          </div>
-          <div id="relationshipMap" class="relationship-map"></div>
+
+      <section class="panel">
+        <div class="section-title compact">
+          <h2>最近编辑</h2>
+          <small>最近新增或修改的人</small>
         </div>
-      </div>
+        <div id="recentPeople" class="person-strip"></div>
+      </section>
+
+      <section class="panel">
+        <div class="section-title compact">
+          <h2>常用分类</h2>
+          <small>点击查看分类下的人</small>
+        </div>
+        <div id="relationStats" class="category-grid"></div>
+      </section>
+
+      <section class="panel">
+        <div class="section-title compact">
+          <h2 id="peopleListTitle">全部人物</h2>
+          <button class="text-btn" id="clearPeopleFilterBtn">全部</button>
+        </div>
+        <div class="card-list" id="peopleList"></div>
+      </section>
+
+      <section class="map-panel">
+        <div class="section-title compact">
+          <h2>关系图</h2>
+          <small>可新增多张关系网，拖动人物调整位置</small>
+        </div>
+        <div class="map-toolbar">
+          <select id="networkSelect"></select>
+          <button id="addNetworkBtn">新增关系网</button>
+        </div>
+        <div class="link-toolbar">
+          <select id="linkFrom"></select>
+          <select id="linkTo"></select>
+          <input id="linkLabel" placeholder="关系说明">
+          <button id="addLinkBtn">连线</button>
+        </div>
+        <div id="relationshipMap" class="relationship-map"></div>
+      </section>
     </section>
 
     <section class="view" data-view="sport">
@@ -103,7 +107,8 @@
         <label>当前心率<input id="heartInput" type="number" min="0"></label>
         <label>今日步数<input id="stepsInput" type="number" min="0"></label>
         <label>热量消耗<input id="calorieInput" type="number" min="0"></label>
-        <label>昨晚睡眠<input id="sleepInput" placeholder="例如 7小时20分"></label>
+        <label>运动时长(分钟)<input id="exerciseMinutesInput" type="number" min="0"></label>
+        <label class="wide">昨晚睡眠<input id="sleepInput" placeholder="例如 7小时20分"></label>
       </div>
       <section class="panel">
         <div class="section-title compact">
@@ -114,17 +119,26 @@
       </section>
       <section class="panel">
         <h2>运动记录</h2>
-        <div id="sportHistory" class="list"></div>
+        <div id="sportHistory" class="compact-list"></div>
       </section>
     </section>
 
     <section class="view" data-view="study">
-      <div class="coming-soon">
+      <div class="section-title">
         <h2>学习</h2>
-        <p>英语模块先占位：后续可以做单词、口语、阅读、错题和每日复盘。</p>
-        <button class="primary-btn" id="addEnglishIdea">记一个想法</button>
-        <textarea id="studyNotes" placeholder="先把你想到的学习功能写这里"></textarea>
+        <button class="primary-btn" id="addEnglishIdea">记录想法</button>
       </div>
+      <section class="panel">
+        <textarea id="studyNotes" placeholder="先把英语学习或其他学习想法写这里"></textarea>
+        <div id="studyFeedback" class="toast-line"></div>
+      </section>
+      <section class="panel">
+        <div class="section-title compact">
+          <h2>想法历史</h2>
+          <small>点击记录后会保存在这里</small>
+        </div>
+        <div id="studyIdeaHistory" class="compact-list"></div>
+      </section>
     </section>
 
     <section class="view" data-view="work">
@@ -132,14 +146,26 @@
         <h2>工作</h2>
         <button class="primary-btn" id="addWorkBtn">新增任务</button>
       </div>
-      <div class="filter-row">
-        <input id="workStart" type="date">
-        <input id="workEnd" type="date">
-        <button id="generatePromptBtn">生成总结 Prompt</button>
-      </div>
-      <div class="work-board" id="workList"></div>
       <section class="panel">
-        <h2>阶段总结 Prompt</h2>
+        <div class="section-title compact">
+          <h2>重点任务进度</h2>
+          <button class="text-btn" id="addRecurringBtn">周期任务</button>
+        </div>
+        <div class="work-board" id="workList"></div>
+      </section>
+      <section class="panel">
+        <div class="section-title compact">
+          <h2>固定提醒</h2>
+          <small>周报、会议材料、工单、专项奖励等</small>
+        </div>
+        <div id="recurringList" class="compact-list"></div>
+      </section>
+      <section class="panel">
+        <div class="filter-row">
+          <input id="workStart" type="date">
+          <input id="workEnd" type="date">
+          <button id="generatePromptBtn">生成总结 Prompt</button>
+        </div>
         <textarea id="promptOutput" readonly placeholder="选择时间段后生成"></textarea>
       </section>
     </section>
@@ -150,15 +176,44 @@
         <button class="primary-btn" id="addExpenseBtn">新增流水</button>
       </div>
       <div class="dashboard-grid two">
-        <article class="metric-card"><span>本月支出</span><strong id="monthSpend">0 元</strong><small>已审核记录</small></article>
-        <article class="metric-card"><span>待补全</span><strong id="todoExpense">0 条</strong><small>截图/导入后需确认</small></article>
+        <article class="metric-card"><span>日支出</span><strong id="daySpend">0 元</strong><small>今天已记录</small></article>
+        <article class="metric-card"><span>月支出</span><strong id="monthSpend">0 元</strong><small>本月已审核</small></article>
       </div>
-      <div class="filter-row">
-        <label class="file-btn">截图导入<input id="billImage" type="file" accept="image/*" multiple></label>
-        <label class="file-btn">CSV导入<input id="expenseImport" type="file" accept=".csv,.txt"></label>
-        <button id="downloadExpenseTemplate">模板</button>
-      </div>
-      <div id="expenseList" class="card-list"></div>
+      <section class="panel">
+        <div class="section-title compact">
+          <h2>快速录入</h2>
+          <small>支付宝和微信导入下月再做</small>
+        </div>
+        <div class="finance-form">
+          <input id="quickExpenseName" placeholder="项目，例如 午餐">
+          <input id="quickExpenseAmount" type="number" min="0" step="0.01" placeholder="金额">
+          <select id="quickExpenseCategory">
+            <option>餐饮</option>
+            <option>交通</option>
+            <option>零食</option>
+            <option>购物</option>
+            <option>医疗</option>
+            <option>住房</option>
+            <option>其他</option>
+          </select>
+          <button id="quickExpenseBtn">记一笔</button>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="section-title compact">
+          <h2>最近7日支出</h2>
+          <small id="weekSpendTotal">总计 0 元</small>
+        </div>
+        <div class="bar-chart" id="financeWeekChart"></div>
+      </section>
+      <section class="panel">
+        <div class="filter-row">
+          <label class="file-btn">截图导入<input id="billImage" type="file" accept="image/*" multiple></label>
+          <label class="file-btn">CSV导入<input id="expenseImport" type="file" accept=".csv,.txt"></label>
+          <button id="downloadExpenseTemplate">模板</button>
+        </div>
+        <div id="expenseList" class="card-list"></div>
+      </section>
     </section>
 
     <section class="view" data-view="travel">
@@ -170,7 +225,17 @@
         <button class="active" data-travel-mode="record">出行记录</button>
         <button data-travel-mode="plan">出行规划</button>
       </div>
-      <div id="tripList" class="card-list"></div>
+      <section class="canvas-panel">
+        <div class="section-title compact">
+          <h2>无边画框</h2>
+          <small>基础信息卡片 + 飞书文档链接</small>
+        </div>
+        <div id="tripCanvas" class="trip-canvas"></div>
+      </section>
+      <section class="panel">
+        <h2>列表</h2>
+        <div id="tripList" class="card-list"></div>
+      </section>
     </section>
   </main>
 
@@ -194,6 +259,20 @@
       <menu>
         <button value="cancel">取消</button>
         <button id="saveDialogBtn" value="default" class="primary-btn">保存</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="dashboardDialog">
+    <form method="dialog" id="dashboardForm">
+      <div class="dialog-head">
+        <h2>首页看板设置</h2>
+        <button value="cancel" class="icon-btn">×</button>
+      </div>
+      <div id="dashboardFields" class="dashboard-settings"></div>
+      <menu>
+        <button value="cancel">取消</button>
+        <button id="saveDashboardBtn" value="default" class="primary-btn">保存</button>
       </menu>
     </form>
   </dialog>

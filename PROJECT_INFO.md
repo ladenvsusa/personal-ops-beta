@@ -34,13 +34,13 @@ travel-log
 ## Release 标题
 
 ```text
-个人运营系统 Beta 0.1.0
+个人运营系统 Beta 0.1.1
 ```
 
 ## Release 标签
 
 ```text
-v0.1.0-beta
+v0.1.1-beta
 ```
 
 ## Release 附件
