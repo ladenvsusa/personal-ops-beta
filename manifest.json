@@ -1,0 +1,9 @@
+{
+  "name": "个人运营系统",
+  "short_name": "个人运营",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f7f5",
+  "theme_color": "#1f7a5c",
+  "orientation": "portrait"
+}

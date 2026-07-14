@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>个人运营系统 Beta</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow" id="todayText">今天</p>
+        <h1>个人运营系统</h1>
+      </div>
+      <button class="icon-btn" id="exportBtn" title="导出数据">↓</button>
+    </header>
+
+    <section class="view active" data-view="dashboard">
+      <div class="dashboard-grid">
+        <article class="metric-card">
+          <span>运动</span>
+          <strong id="dashSteps">0 步</strong>
+          <small id="dashCalories">0 千卡</small>
+        </article>
+        <article class="metric-card">
+          <span>睡眠</span>
+          <strong id="dashSleep">待录入</strong>
+          <small>昨晚睡眠</small>
+        </article>
+        <article class="metric-card">
+          <span>任务</span>
+          <strong id="dashTasks">0 项</strong>
+          <small>当前重点</small>
+        </article>
+        <article class="metric-card">
+          <span>支出</span>
+          <strong id="dashSpend">0 元</strong>
+          <small>本月已记录</small>
+        </article>
+      </div>
+
+      <section class="panel">
+        <div class="section-title">
+          <h2>今日待办</h2>
+          <button class="text-btn" data-tab-target="work">去工作</button>
+        </div>
+        <div id="todayTasks" class="list empty-list">暂无重点任务</div>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <h2>近期提醒</h2>
+        </div>
+        <div class="timeline" id="recentTimeline"></div>
+      </section>
+    </section>
+
+    <section class="view" data-view="people">
+      <div class="section-title">
+        <h2>人际关系</h2>
+        <button class="primary-btn" id="addPersonBtn">新增角色</button>
+      </div>
+      <div class="filter-row">
+        <input id="personSearch" placeholder="搜索姓名、关系、简介">
+        <select id="personCategory">
+          <option value="">全部关系</option>
+        </select>
+        <button id="downloadPeopleTemplate">模板</button>
+        <label class="file-btn">导入<input id="peopleImport" type="file" accept=".csv,.txt"></label>
+      </div>
+      <div class="split">
+        <div class="card-list" id="peopleList"></div>
+        <div class="map-panel">
+          <div class="section-title compact">
+            <h2>关系图</h2>
+            <small>可新增多张关系网，拖动人物调整位置</small>
+          </div>
+          <div class="map-toolbar">
+            <select id="networkSelect"></select>
+            <button id="addNetworkBtn">新增关系网</button>
+          </div>
+          <div class="link-toolbar">
+            <select id="linkFrom"></select>
+            <select id="linkTo"></select>
+            <input id="linkLabel" placeholder="关系说明">
+            <button id="addLinkBtn">连线</button>
+          </div>
+          <div id="relationshipMap" class="relationship-map"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" data-view="sport">
+      <div class="section-title">
+        <h2>运动</h2>
+        <button class="primary-btn" id="saveSportBtn">保存记录</button>
+      </div>
+      <div class="form-grid">
+        <label>身高(cm)<input id="heightInput" type="number" min="0" step="0.1"></label>
+        <label>体重(kg)<input id="weightInput" type="number" min="0" step="0.1"></label>
+        <label>当前心率<input id="heartInput" type="number" min="0"></label>
+        <label>今日步数<input id="stepsInput" type="number" min="0"></label>
+        <label>热量消耗<input id="calorieInput" type="number" min="0"></label>
+        <label>昨晚睡眠<input id="sleepInput" placeholder="例如 7小时20分"></label>
+      </div>
+      <section class="panel">
+        <div class="section-title compact">
+          <h2>变化曲线</h2>
+          <small>先用手动录入，后续接高驰</small>
+        </div>
+        <canvas id="weightChart" width="680" height="220"></canvas>
+      </section>
+      <section class="panel">
+        <h2>运动记录</h2>
+        <div id="sportHistory" class="list"></div>
+      </section>
+    </section>
+
+    <section class="view" data-view="study">
+      <div class="coming-soon">
+        <h2>学习</h2>
+        <p>英语模块先占位：后续可以做单词、口语、阅读、错题和每日复盘。</p>
+        <button class="primary-btn" id="addEnglishIdea">记一个想法</button>
+        <textarea id="studyNotes" placeholder="先把你想到的学习功能写这里"></textarea>
+      </div>
+    </section>
+
+    <section class="view" data-view="work">
+      <div class="section-title">
+        <h2>工作</h2>
+        <button class="primary-btn" id="addWorkBtn">新增任务</button>
+      </div>
+      <div class="filter-row">
+        <input id="workStart" type="date">
+        <input id="workEnd" type="date">
+        <button id="generatePromptBtn">生成总结 Prompt</button>
+      </div>
+      <div class="work-board" id="workList"></div>
+      <section class="panel">
+        <h2>阶段总结 Prompt</h2>
+        <textarea id="promptOutput" readonly placeholder="选择时间段后生成"></textarea>
+      </section>
+    </section>
+
+    <section class="view" data-view="finance">
+      <div class="section-title">
+        <h2>理财</h2>
+        <button class="primary-btn" id="addExpenseBtn">新增流水</button>
+      </div>
+      <div class="dashboard-grid two">
+        <article class="metric-card"><span>本月支出</span><strong id="monthSpend">0 元</strong><small>已审核记录</small></article>
+        <article class="metric-card"><span>待补全</span><strong id="todoExpense">0 条</strong><small>截图/导入后需确认</small></article>
+      </div>
+      <div class="filter-row">
+        <label class="file-btn">截图导入<input id="billImage" type="file" accept="image/*" multiple></label>
+        <label class="file-btn">CSV导入<input id="expenseImport" type="file" accept=".csv,.txt"></label>
+        <button id="downloadExpenseTemplate">模板</button>
+      </div>
+      <div id="expenseList" class="card-list"></div>
+    </section>
+
+    <section class="view" data-view="travel">
+      <div class="section-title">
+        <h2>出行</h2>
+        <button class="primary-btn" id="addTripBtn">新增记录</button>
+      </div>
+      <div class="segmented">
+        <button class="active" data-travel-mode="record">出行记录</button>
+        <button data-travel-mode="plan">出行规划</button>
+      </div>
+      <div id="tripList" class="card-list"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="active" data-tab="dashboard">首页</button>
+    <button data-tab="people">人际</button>
+    <button data-tab="sport">运动</button>
+    <button data-tab="study">学习</button>
+    <button data-tab="work">工作</button>
+    <button data-tab="finance">理财</button>
+    <button data-tab="travel">出行</button>
+  </nav>
+
+  <dialog id="editorDialog">
+    <form method="dialog" id="editorForm">
+      <div class="dialog-head">
+        <h2 id="dialogTitle">编辑</h2>
+        <button value="cancel" class="icon-btn">×</button>
+      </div>
+      <div id="editorFields" class="form-grid"></div>
+      <menu>
+        <button value="cancel">取消</button>
+        <button id="saveDialogBtn" value="default" class="primary-btn">保存</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script src="./app.js"></script>
+</body>
+</html>

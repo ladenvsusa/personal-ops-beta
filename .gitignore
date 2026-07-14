@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+android/.gradle/
+android/build/
+android/app/build/
+www/
+*.apk
+*.aab
+
+# Local/generated logs
+server.log
+server.err
+*.log
+
+# Android local machine files
+android/local.properties
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Temporary files
+*.tmp
+*.bak

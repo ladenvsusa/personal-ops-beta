@@ -1,0 +1,9 @@
+{
+  "appId": "com.personal.ops.beta",
+  "appName": "个人运营Beta",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": true
+  }
+}

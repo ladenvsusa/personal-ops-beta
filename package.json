@@ -1,0 +1,26 @@
+{
+  "name": "personal-life-apk",
+  "version": "0.1.0-beta",
+  "private": false,
+  "description": "个人运营系统 Beta APK：聚合人际、运动、学习、工作、理财、出行的个人运营中枢。",
+  "scripts": {
+    "prepare-web": "node scripts/prepare-web.js",
+    "cap:sync": "pnpm run prepare-web && cap sync android",
+    "build:apk": "powershell -ExecutionPolicy Bypass -File scripts/build-beta.ps1"
+  },
+  "keywords": [
+    "personal-dashboard",
+    "life-management",
+    "android",
+    "capacitor",
+    "productivity"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^7.4.2",
+    "@capacitor/core": "^7.4.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.2"
+  }
+}
